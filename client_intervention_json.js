@@ -31,6 +31,6 @@ Promise.all(links.map(url =>
         main_arr = main_arr.concat(tmp_json_arr)
     })
 )).then(data => {
-    console.log(main_arr)
-});
-
+    main_arr = main_arr.sort((a,b)=>a["№"]-b["№"])
+    console.log(JSON.stringify(main_arr, null, '\t'))
+})
