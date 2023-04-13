@@ -38,7 +38,7 @@ Promise.all(links.map(url =>
     const pre = document.createElement('pre')
     root.appendChild(pre)
     pre.textContent = json
-    download('offense.json', json);
+    download('release.json', json);
 })
 
 function download(filename, text) {
