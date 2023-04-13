@@ -33,6 +33,20 @@ Promise.all(links.map(url =>
     })
 )).then(data => {
     main_arr = main_arr.sort((a,b)=>a["№"]-b["№"])
-    console.log(JSON.stringify(main_arr, null, '\t'))
+    const json = JSON.stringify(main_arr, null, '\t')
+    console.log(json)
+    const pre = document.createElement('pre')
+    root.appendChild(pre)
+    pre.textContent = json
+    download('offense.json', json);
 })
 
+function download(filename, text) {
+    const element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
