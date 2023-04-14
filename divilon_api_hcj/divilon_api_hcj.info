@@ -1,0 +1,4 @@
+name = API module [hcj]
+description = HCJ Module for work with different system.
+package = Daenur modules
+core = 7.x

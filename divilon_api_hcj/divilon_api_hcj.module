@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * @file
+ * Main module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function divilon_api_hcj_menu() {
+  $items['admin/opendata_hcj'] = array(
+    'title' => 'Завантажити Open Data [hcj]',
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 9999,
+    'access arguments' => array('publish opendata hcj'),
+    'file' => 'divilon_api_hcj.admin.inc',
+    'page callback' => 'divilon_api_hcj_opendata',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function divilon_api_hcj_permission() {
+  return array(
+    'publish opendata hcj' => array(
+      'title' => t('Завантажити Opendata [hcj]'),
+    )
+  );
+}
