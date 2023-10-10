@@ -38,6 +38,19 @@
 	}
 </style>
 <div id="opendata">
+	<ul id="excel_links" class="hide">
+		<li><a 
+				href="#fromExcel"
+				data-type="automated_distribution"
+				data-filename="fromExcel.json"
+			>
+				Конвертуати з MS Ecxel
+			</a>
+			[<a href="https://data.gov.ua/dataset/83d567d1-4111-468a-b6cb-d3ac4d0f0ec2" target="_blank">
+				набор данних на data.gov.ua
+			</a>]
+		</li>
+	</ul>
 	<ul id="links" class="hide">
 		<li>
 			<a 
@@ -91,6 +104,7 @@
 	</div>
 </div>
 <script>
+	const excelLinksContainer = document.querySelector('#opendata #excel_links')
 	const linksConainer = document.querySelector('#opendata #links')
 	const preloadContainer = document.querySelector('#opendata #preload')
 	const resultContainer = document.querySelector('#opendata #result')
@@ -115,11 +129,15 @@
 	)).then(data => {
 		hide(preloadContainer)
 		show(linksConainer)
+		show(excelLinksContainer)
 	})
 
 
 	linksConainer.addEventListener('click',(event)=>{
+		if (event.target.tagName!=='A')
+			return
 		event.preventDefault()
+
 		hide(resultContainer)
 		show(preloadContainer)
 		const count = +event.target.dataset['pages']
@@ -217,6 +235,45 @@
 			show(resultContainer)
 		})
 
+	})
+
+	excelLinksContainer.addEventListener('click', (event)=>{
+		if (event.target.tagName!=='A')
+			return
+		if (event.target.getAttribute('target'))
+			return
+		event.preventDefault()
+		if (event.target.dataset['type']==='automated_distribution') {
+			const exelString = prompt('Скопіюйте данні з Excel (саме таблиці)')
+
+            const dataObjArr = exelString
+            .replace(/,\s+\n/gi,', new_line')
+            .split('\n')
+            .map(line=>{
+                try {
+                    const arr = line.split('\t').map(cell=>cell.replace(/new_line/gi,'\n').replace(/^"+|\"$/gm,''))
+                    return {
+                        id: +arr[4],
+                        dateString: arr[1].trim(),
+                        hcjMember: arr[2].trim(),
+                        num: arr[3].trim(),
+                        complainant: arr[5].trim(),
+                        judge: arr[6].trim(),
+                        court: arr[7].trim(),
+                    }
+                }
+                catch {
+                    return null
+                }
+            })
+            .filter(obj=>obj.id>99)
+
+            const json = JSON.stringify(dataObjArr, null, '\t')
+            pre.textContent = json
+            inputFilename.value = event.target.dataset['filename']
+            hide(preloadContainer)
+            show(resultContainer)
+		}
 	})
 
 	downloadBtn.addEventListener('click', ()=>{
